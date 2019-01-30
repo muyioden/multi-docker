@@ -1,0 +1,23 @@
+required: sudo
+services:
+  - docker
+
+before_install:
+  - docker build -t muyioden/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run muyioden/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t muyioden/multi-client ./client
+  - docker build -t muyioden/multi-nginx ./nginx
+  - docker build -t muyioden/multi-server ./server
+  - docker build -t muyioden/multi-worker ./worker
+
+# Docker login before pushing build to docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Push build to docker hub
+  - docker push muyioden/multi-client
+  - docker push muyioden/multi-nginx
+  - docker push muyioden/multi-server
+  - docker push muyioden/multi-worker
