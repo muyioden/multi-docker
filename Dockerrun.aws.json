@@ -1,0 +1,36 @@
+{
+    "AWSDockerrunVersion": "2",
+    "containerDefinitins":[
+        {
+            "name": "client",
+            "image": "muyidocker/client",
+            "hostname": "client",
+            "essential": false
+        },
+        {
+            "name": "server",
+            "image": "muyidocker/server",
+            "hostname": "api",
+            "essential": false
+        },
+        {
+            "name": "worker",
+            "image": "muyidocker/worker",
+            "hostname": "worker",
+            "essential": false
+        },
+        {
+            "name": "nginx",
+            "image": "nginx",
+            "hostname":"nginx",
+            "essential": true, 
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": ["client", "server"]
+        }
+    ]
+}
